@@ -15,7 +15,6 @@ func main() {
    * Syntax: klever.Page(route, file)
    */ 
   klever.Page("/", "index")
-  klever.Page("/contact", "contact")
 
   /* Start the application */
   klever.Start()
