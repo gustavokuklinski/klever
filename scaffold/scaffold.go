@@ -1,8 +1,4 @@
-// Klever
-// - Scaffold
-// ---------------------------------------------------------
-// Generates the basic template files
-// ---------------------------------------------------------
+// Klever Scaffold - Generates the basic template files
 package scaffold
 
 import (
@@ -64,8 +60,8 @@ func generateScaffoldFiles() {
 
 }
 
+// Checks if any of HTML files below exists, If not, generate fallback templates
 func GenerateScaffold() {
-	// Checks if any of HTML files below exists, If not, create fallback template
 
 	// Check for: layout.html
 	if _, err := os.Stat("includes" + string(filepath.Separator) + "layout.html"); os.IsNotExist(err) {

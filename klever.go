@@ -1,7 +1,4 @@
-//  Klever
-//  ---------------------------------------------------------
-//  Micro router framework for static web sites
-//  ---------------------------------------------------------
+//  Klever - Micro router framework for static web sites
 package klever
 
 import (
@@ -14,12 +11,10 @@ import (
 	"path/filepath"
 )
 
-// Render templates
+// Render templates.
 // Use the directory tree and the scaffold package to set the right templates and
-// directories of the project
-// Read:
-// - tplDir  - The base [/pages]
-// - tplFile - The file set on klever.Page(route, file)
+// directories of the project this function read two parameters:
+// tplDir: the base [/pages] and tplFile: the file set on klever.Page(route, file)
 func Layout(tplDir, tplFile string, w http.ResponseWriter) {
 
 	// [layout.html]
@@ -47,7 +42,7 @@ func Layout(tplDir, tplFile string, w http.ResponseWriter) {
 	}
 }
 
-// Render Route and Page
+// Render Route and Page.
 // Usage:
 // In the main function use: klever.Page(route, file)
 func Page(route, file string) {
@@ -70,10 +65,10 @@ func generateDirs() {
 
 }
 
-// Start Klever
-// 1. Create the base directory tree
-// 2. Generate base Scaffold templates(Check the package: github.com/gustavokuklinski/klever/scaffold)
-// 3. Load a basic HTTP Server
+// Start Klever in three steps:
+// 1. Create the base directory tree.
+// 2. Generate base Scaffold templates(Check the package: github.com/gustavokuklinski/klever/scaffold).
+// 3. Load a basic HTTP Server.
 func Start() {
 
 	// Check if folders exists
