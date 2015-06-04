@@ -7,7 +7,7 @@ import (
 )
 
 // Generate base scaffold template
-func generateScaffoldFiles() {
+func GenerateScaffoldFiles() {
 
 	// Create: [layout.html] in [/includes] : Render <html></html>
 	baseLayout, err := os.Create("includes" + string(filepath.Separator) + "layout.html")
@@ -65,19 +65,19 @@ func GenerateScaffold() {
 
 	// Check for: layout.html
 	if _, err := os.Stat("includes" + string(filepath.Separator) + "layout.html"); os.IsNotExist(err) {
-		generateScaffoldFiles()
+		GenerateScaffoldFiles()
 
 		// Check for: head.html
 	} else if _, err := os.Stat("includes" + string(filepath.Separator) + "head.html"); os.IsNotExist(err) {
-		generateScaffoldFiles()
+		GenerateScaffoldFiles()
 
 		// Check for: nav.html
 	} else if _, err := os.Stat("includes" + string(filepath.Separator) + "nav.html"); os.IsNotExist(err) {
-		generateScaffoldFiles()
+		GenerateScaffoldFiles()
 
 		// check for: footer.html
 	} else if _, err := os.Stat("includes" + string(filepath.Separator) + "footer.html"); os.IsNotExist(err) {
-		generateScaffoldFiles()
+		GenerateScaffoldFiles()
 
 	}
 
