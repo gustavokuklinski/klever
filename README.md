@@ -1,6 +1,7 @@
 # Klever
 
 ### Kickstart
+Setup your Go Workspace, create a new file and paste the Klever Hello World :)
 
 ```go
 package main
@@ -30,4 +31,4 @@ $go run app.go
 
 Access your: localhost:8080
 
-This project was made just for study GoLang, don't use in production yet :)
+*This project was made just for study GoLang, don't use in production yet :)*
