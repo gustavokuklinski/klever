@@ -28,7 +28,7 @@ func GenerateScaffoldFiles() {
 		panic(err)
 	}
 
-	// When file creation finished, Close files
+	// Close files after end writting files
 	defer baseFooter.Close()
 	defer baseHead.Close()
 	defer baseNav.Close()
