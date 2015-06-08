@@ -13,9 +13,9 @@ import (
 // Render Struct
 // Used with Layout and Page function
 type Render struct {
-  tplD string // Store the directory
-  tplF string // Store the file to render
-  tplR string // Store the URL
+	tplD string // Store the directory
+	tplF string // Store the file to render
+	tplR string // Store the URL
 }
 
 // Render templates.
@@ -36,11 +36,11 @@ func Layout(tplDir, tplFile string, w http.ResponseWriter) {
 	// [footer.html]
 	footer := filepath.Join("includes", "footer.html")
 
-  // Mount the struct and get the values from tplDir and tplFile
-  tpl := Render{tplD: tplDir, tplF: tplFile}
+	// Mount the struct and get the values from tplDir and tplFile
+	tpl := Render{tplD: tplDir, tplF: tplFile}
 
-  // Use the Struct data to build the template
-  page := filepath.Join(tpl.tplD, tpl.tplF)
+	// Use the Struct data to build the template
+	page := filepath.Join(tpl.tplD, tpl.tplF)
 
 	tmpl, err := template.ParseFiles(layout, head, nav, footer, page)
 	if err != nil {
@@ -56,12 +56,12 @@ func Layout(tplDir, tplFile string, w http.ResponseWriter) {
 // Usage:
 // In the main function use: klever.Page(route, file)
 func Page(route, file string) {
-  
-  // Mount the struct and get the values from route and file 
-  tpl := Render{tplF: file, tplR: route}
 
-  // Use the struct data to build the route and send the file to Layout function
-  // Responsible to build the template
+	// Mount the struct and get the values from route and file
+	tpl := Render{tplF: file, tplR: route}
+
+	// Use the struct data to build the route and send the file to Layout function
+	// Responsible to build the template
 	http.HandleFunc(tpl.tplR, func(w http.ResponseWriter, r *http.Request) {
 		Layout("pages", tpl.tplF, w)
 	})
