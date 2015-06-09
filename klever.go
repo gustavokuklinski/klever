@@ -2,20 +2,12 @@
 package klever
 
 import (
+	"fmt"
 	"github.com/gustavokuklinski/klever/scaffold"
 	"html/template"
-	"log"
 	"net/http"
 	"path/filepath"
 )
-
-// Render Struct
-// Used with Layout and Page function
-type Render struct {
-	TplD string // Store the directory (Default: Pages)
-	TplF string // Store the file to render
-	TplR string // Store the route URL
-}
 
 // Render templates.
 // Use the directory tree and the scaffold package to set the right templates and
@@ -35,11 +27,8 @@ func Layout(tplDir, tplFile string, w http.ResponseWriter) {
 	// [footer.html]
 	footer := filepath.Join("includes", "footer.html")
 
-	// Mount the struct and get the values from tplDir and tplFile
-	tpl := Render{TplD: tplDir, TplF: tplFile}
-
-	// Use the Struct data to build the template
-	page := filepath.Join(tpl.TplD, tpl.TplF)
+	// Get tplDir and tplFile to build the pages
+	page := filepath.Join(tplDir, tplFile)
 
 	// Parse template file
 	tmpl, err := template.ParseFiles(layout, head, nav, footer, page)
@@ -58,15 +47,12 @@ func Layout(tplDir, tplFile string, w http.ResponseWriter) {
 // In the main function use: klever.Page(route, file)
 func Page(route, file string) {
 
-	// Mount the struct and get the values from route and file
-	tpl := Render{TplF: file, TplR: route}
-
-	// Use the struct data to build the route and send the file to Layout function
+	// Use the route to set URL
 	// Responsible to build the template
-	http.HandleFunc(tpl.TplR, func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
 
 		// Layout function, use [/pages] as default folder to serve pages file
-		Layout("pages", tpl.TplF, w)
+		Layout("pages", file, w)
 	})
 }
 
@@ -83,7 +69,7 @@ func Start() {
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
 	// Start webserver on port: 8080 - You can fit your need :)
-	log.Println("Listening...")
+	fmt.Println("Listening...")
 	http.ListenAndServe(":8080", nil)
 
 }

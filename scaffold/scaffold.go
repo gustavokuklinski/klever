@@ -9,7 +9,7 @@ import (
 // Generate base Dirs
 // Create the main directory tree inside the root directory
 func GenerateScaffoldDirs() {
-  // Generate base folders
+	// Generate base folders
 	os.Mkdir("."+string(filepath.Separator)+"includes", 0777)
 	os.Mkdir("."+string(filepath.Separator)+"pages", 0777)
 	os.Mkdir("."+string(filepath.Separator)+"assets", 0777)
@@ -18,8 +18,8 @@ func GenerateScaffoldDirs() {
 	os.Mkdir("."+string(filepath.Separator)+"assets"+string(filepath.Separator)+"css", 0777)
 	os.Mkdir("."+string(filepath.Separator)+"assets"+string(filepath.Separator)+"js", 0777)
 
-
 }
+
 // Generate base scaffold template
 func GenerateScaffoldFiles() {
 
@@ -77,7 +77,7 @@ func GenerateScaffoldFiles() {
 // Checks if any of HTML files below exists or base directories, If not, generate fallback templates
 func GenerateScaffold() {
 
-  // Check if folders exists
+	// Check if folders exists
 	// If not, create a brand new project
 	// Check [/includes] dir
 	if _, err := os.Stat("includes"); os.IsNotExist(err) {
@@ -95,9 +95,7 @@ func GenerateScaffold() {
 	} else if _, err := os.Stat("posts"); os.IsNotExist(err) {
 		GenerateScaffoldDirs()
 
-  }
-
-
+	}
 
 	// Check for: layout.html
 	if _, err := os.Stat("includes" + string(filepath.Separator) + "layout.html"); os.IsNotExist(err) {
@@ -116,7 +114,5 @@ func GenerateScaffold() {
 		GenerateScaffoldFiles()
 
 	}
-
-  
 
 }
