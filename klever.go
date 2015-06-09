@@ -6,16 +6,15 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 )
 
 // Render Struct
 // Used with Layout and Page function
 type Render struct {
-	tplD string // Store the directory
-	tplF string // Store the file to render
-	tplR string // Store the URL
+	TplD string // Store the directory (Default: Pages)
+	TplF string // Store the file to render
+	TplR string // Store the route URL
 }
 
 // Render templates.
@@ -37,11 +36,12 @@ func Layout(tplDir, tplFile string, w http.ResponseWriter) {
 	footer := filepath.Join("includes", "footer.html")
 
 	// Mount the struct and get the values from tplDir and tplFile
-	tpl := Render{tplD: tplDir, tplF: tplFile}
+	tpl := Render{TplD: tplDir, TplF: tplFile}
 
 	// Use the Struct data to build the template
-	page := filepath.Join(tpl.tplD, tpl.tplF)
+	page := filepath.Join(tpl.TplD, tpl.TplF)
 
+	// Parse template file
 	tmpl, err := template.ParseFiles(layout, head, nav, footer, page)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -49,6 +49,7 @@ func Layout(tplDir, tplFile string, w http.ResponseWriter) {
 	}
 	if err := tmpl.ExecuteTemplate(w, "layout", nil); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }
 
@@ -58,54 +59,21 @@ func Layout(tplDir, tplFile string, w http.ResponseWriter) {
 func Page(route, file string) {
 
 	// Mount the struct and get the values from route and file
-	tpl := Render{tplF: file, tplR: route}
+	tpl := Render{TplF: file, TplR: route}
 
 	// Use the struct data to build the route and send the file to Layout function
 	// Responsible to build the template
-	http.HandleFunc(tpl.tplR, func(w http.ResponseWriter, r *http.Request) {
-		Layout("pages", tpl.tplF, w)
+	http.HandleFunc(tpl.TplR, func(w http.ResponseWriter, r *http.Request) {
+
+		// Layout function, use [/pages] as default folder to serve pages file
+		Layout("pages", tpl.TplF, w)
 	})
 }
 
-// Generate base Dirs
-// Create the main directory tree inside the root directory
-func generateDirs() {
-	// Generate base folders
-	os.Mkdir("."+string(filepath.Separator)+"includes", 0777)
-	os.Mkdir("."+string(filepath.Separator)+"pages", 0777)
-	os.Mkdir("."+string(filepath.Separator)+"assets", 0777)
-	os.Mkdir("."+string(filepath.Separator)+"posts", 0777)
-	os.Mkdir("."+string(filepath.Separator)+"assets"+string(filepath.Separator)+"img", 0777)
-	os.Mkdir("."+string(filepath.Separator)+"assets"+string(filepath.Separator)+"css", 0777)
-	os.Mkdir("."+string(filepath.Separator)+"assets"+string(filepath.Separator)+"js", 0777)
-
-}
-
-// Start Klever in three steps:
-// 1. Create the base directory tree.
-// 2. Generate base Scaffold templates(Check the package: github.com/gustavokuklinski/klever/scaffold).
-// 3. Load a basic HTTP Server.
+// Start Klever in two steps:
+// 1. Generate base directories and scaffold templates(Check the package: github.com/gustavokuklinski/klever/scaffold).
+// 2. Load a basic HTTP Server.
 func Start() {
-
-	// Check if folders exists
-	// If not, create a brand new project
-
-	// Check [/includes] dir
-	if _, err := os.Stat("includes"); os.IsNotExist(err) {
-		generateDirs()
-
-		// Check [/assets] dir
-	} else if _, err := os.Stat("assets"); os.IsNotExist(err) {
-		generateDirs()
-
-		// Check [/pages] dir
-	} else if _, err := os.Stat("pages"); os.IsNotExist(err) {
-		generateDirs()
-
-		// Check [/posts] dir
-	} else if _, err := os.Stat("posts"); os.IsNotExist(err) {
-		generateDirs()
-	}
 
 	// Start Scaffold lib to generate base files
 	scaffold.GenerateScaffold()
@@ -117,4 +85,5 @@ func Start() {
 	// Start webserver on port: 8080 - You can fit your need :)
 	log.Println("Listening...")
 	http.ListenAndServe(":8080", nil)
+
 }
