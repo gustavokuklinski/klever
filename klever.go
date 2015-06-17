@@ -2,9 +2,9 @@
 package klever
 
 import (
-	"fmt"
 	"github.com/gustavokuklinski/klever/scaffold"
 	"html/template"
+	"log"
 	"net/http"
 	"path/filepath"
 )
@@ -53,7 +53,9 @@ func Page(route, file string) {
 
 		// Layout function, use [/pages] as default folder to serve pages file
 		Layout("pages", file, w)
+		log.Println("Getting route: " + route)
 	})
+
 }
 
 // Start Klever in two steps:
@@ -69,7 +71,7 @@ func Start() {
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
 	// Start webserver on port: 8080 - You can fit your need :)
-	fmt.Println("Listening...")
+	log.Println("Listening...")
 	http.ListenAndServe(":8080", nil)
 
 }
