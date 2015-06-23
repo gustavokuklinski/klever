@@ -22,7 +22,11 @@ func GenerateScaffoldDirs() {
 
 // Generate base scaffold template
 func GenerateScaffoldFiles() {
+	// Base Config files
+	// Create: config.json on Root dir, Default on port: 8080
+	baseConfig, err := os.Create("." + string(filepath.Separator) + "config.json")
 
+	// Base Template files
 	// Create: [layout.html] in [/includes] : Render <html></html>
 	baseLayout, err := os.Create("includes" + string(filepath.Separator) + "layout.html")
 
@@ -43,11 +47,15 @@ func GenerateScaffoldFiles() {
 	}
 
 	// Close files after end writting files
+	defer baseConfig.Close()
 	defer baseFooter.Close()
 	defer baseHead.Close()
 	defer baseNav.Close()
 	defer baseLayout.Close()
 	defer indexPage.Close()
+
+	// Write the base config
+	baseConfig.WriteString("{\n \"AppPort\":\"8080\"\n}")
 
 	// Write the standard templates
 	// Base Scaffold HTML layout
@@ -66,6 +74,7 @@ func GenerateScaffoldFiles() {
 	indexPage.WriteString("{{ define \"title\" }} Klever Home {{ end }}\n{{ define \"body\" }}\n<section>\n<h1>Welcome to KLEVER!</h1>\n<p> Start writing your pages :) <br /><br /> This is a Dumb <b>hello world</b>.<br /> If you see this, you've done it Right!...<br /><br /> Why don't you start crafting a real nice website? </p>\n</section>\n{{ end }}")
 
 	// Write to files
+	baseConfig.Sync()
 	baseFooter.Sync()
 	baseHead.Sync()
 	baseNav.Sync()
@@ -111,6 +120,9 @@ func GenerateScaffold() {
 
 		// check for: footer.html
 	} else if _, err := os.Stat("includes" + string(filepath.Separator) + "footer.html"); os.IsNotExist(err) {
+		GenerateScaffoldFiles()
+
+	} else if _, err := os.Stat("." + string(filepath.Separator) + "config.json"); os.IsNotExist(err) {
 		GenerateScaffoldFiles()
 
 	}
