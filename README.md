@@ -29,6 +29,14 @@ $go get
 $go run app.go
 ```
 
-Access your: localhost:8080
+Will be generate a config.json for config the HTTP port
 
+```json
+{
+ "AppPort":"8080"
+}
+``` 
+
+By default will be port 8080, you can change.
+To apply the changes on this file you must restart the aplication
 *This project was made just for study GoLang, don't use in production yet :)*
