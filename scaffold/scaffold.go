@@ -1,4 +1,4 @@
-// Klever Scaffold - Generates the basic template files
+// Package scaffold - Generates the basic template files
 package scaffold
 
 import (
@@ -6,8 +6,7 @@ import (
 	"path/filepath"
 )
 
-// Generate base Dirs
-// Create the main directory tree inside the root directory
+// GenerateScaffoldDirs - Create the main directory tree inside the root directory
 func GenerateScaffoldDirs() {
 	// Generate base folders
 	os.Mkdir("."+string(filepath.Separator)+"includes", 0777)
@@ -20,7 +19,7 @@ func GenerateScaffoldDirs() {
 
 }
 
-// Generate base scaffold template
+// GenerateScaffoldFiles create base scaffold template
 func GenerateScaffoldFiles() {
 	// Base Config files
 	// Create: config.json on Root dir, Default on port: 8080
@@ -83,7 +82,7 @@ func GenerateScaffoldFiles() {
 
 }
 
-// Checks if any of HTML files below exists or base directories, If not, generate fallback templates
+// GenerateScaffold checks if any of HTML files below exists or base directories, If not, generate fallback templates
 func GenerateScaffold() {
 
 	// Check if folders exists
