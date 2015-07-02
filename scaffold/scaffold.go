@@ -59,7 +59,7 @@ func GenerateScaffoldFiles() {
 
 	// Write the standard templates
 	// Base Scaffold HTML layout
-	baseLayout.WriteString("{{ define \"layout\" }}\n<!DOCTYPE html>\n<html lang=\"en_US\">\n<head>\n{{ template \"head\" }}\n</head>\n<body>\n{{ template \"nav\" }}\n{{ template \"body\" }}\n{{ template \"footer\" }}\n</body>\n</html>\n{{ end }}")
+	baseLayout.WriteString("{{ define \"layout\" }}\n<!DOCTYPE html>\n<html lang=\"en_US\">\n<head>\n{{ template \"head\" }}\n</head>\n<body>\n{{ template \"nav\" }}\n{{ template \"body\" . }}\n{{ template \"footer\" }}\n</body>\n</html>\n{{ end }}")
 
 	// <HEAD> Tag template
 	baseHead.WriteString("{{ define \"head\" }}\n<title> {{ template \"title\" }} </title>\n<meta charset=\"utf-8\" />\n<style type=\"text/css\">*{margin:0; padding: 0;}body {background: #34495e;} a {font-family: Arial; color: #ffffff;} h1 { font-family: Arial; text-align: center; padding-bottom: 10px; } nav{width: 100%; background: #000000; padding-top: 20px; padding-bottom: 20px} nav a { padding-left: 10px; font-family: Arial; color: #ffffff; } footer{width: 100%; background: #34495e; padding-top: 25px; padding-bottom: 25px; font-family: Arial;} section{background: #cccccc; padding-top: 10%; padding-bottom: 10%;} p { font-family: Arial; text-align: center; }</style>{{ end }}")

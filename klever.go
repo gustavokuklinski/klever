@@ -21,11 +21,17 @@ type Pages struct {
 	Route, Template string
 }
 
+// Render JSON posts
+type Posts struct {
+	Title, Date, Url string
+	Post             template.HTML
+}
+
 // Render templates.
 // Use the directory tree and the scaffold package to set the right templates and
 // directories of the project this function read two parameters:
 // tplDir: the base [/pages] and tplFile: the file set on klever.Page(route, file)
-func Layout(templateFile string, w http.ResponseWriter) {
+func Layout(templateFile string, w http.ResponseWriter, displayPost Posts) {
 
 	// [layout.html]
 	layout := filepath.Join("includes", "layout.html")
@@ -48,17 +54,18 @@ func Layout(templateFile string, w http.ResponseWriter) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if err := tmpl.ExecuteTemplate(w, "layout", nil); err != nil {
+
+	if err := tmpl.ExecuteTemplate(w, "layout", displayPost); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 }
 
 // Set Route and Tempate file
 func (p *Pages) SetPage(setRoute, setFile string) {
 	p.Route = setRoute
 	p.Template = setFile
-
 }
 
 // Render Route and Page.
@@ -70,18 +77,67 @@ func Page(getRoute, getFile string) {
 	p := Pages{}
 	p.SetPage(getRoute, getFile)
 
+	displayPost := Posts{}
 	// Use the route to set URL
 	// Responsible to build the template
 	http.HandleFunc(p.Route, func(w http.ResponseWriter, r *http.Request) {
 
 		// Layout function, use [/pages] as default folder to serve pages file
-		Layout(p.Template, w)
+		Layout(p.Template, w, displayPost)
+
 		log.Println("Getting page: " + p.Route)
 	})
+}
+
+// Display blog posts
+func BlogPosts(getRoute, getFile string) {
+	p := Pages{}
+	p.SetPage(getRoute, getFile)
+
+	// Scan on folder [/posts] for JSON posts
+	postDir, err := os.Open("." + string(filepath.Separator) + "posts" + string(filepath.Separator))
+	if err != nil {
+		log.Println(err)
+	}
+	defer postDir.Close()
+
+	postFile, err := postDir.Readdir(-1)
+	if err != nil {
+		log.Println(err)
+	}
+
+	// Loop the folder getting posts
+	for _, postFile := range postFile {
+		if postFile.Mode().IsRegular() {
+
+			// Get all JSON files scaned from folder
+			getPost, _ := os.Open("." + string(filepath.Separator) + "posts" + string(filepath.Separator) + postFile.Name())
+
+			// Decode each JSON file to Struct
+			decodePost := json.NewDecoder(getPost)
+			postConfig := Posts{}
+			err := decodePost.Decode(&postConfig)
+			if err != nil {
+				log.Println(err)
+			}
+
+			postURL := postConfig.Url
+
+			// Use the route to set URL
+			// Responsible to build the template
+			http.HandleFunc(p.Route+"/"+postURL, func(w http.ResponseWriter, r *http.Request) {
+
+				// Layout function, use [/pages] as default folder to serve pages file
+				Layout(p.Template, w, postConfig)
+				//log.Println(postConfig)
+				log.Println("Getting Blog page: " + p.Route + "/" + postURL)
+
+			})
+		}
+	}
 
 }
 
-// Start Klever in two steps:
 // 1. Generate base directories and scaffold templates(Check the package: github.com/gustavokuklinski/klever/scaffold).
 // 2. Read Json config file
 // 3. Load a basic HTTP Server.
@@ -106,7 +162,7 @@ func Start() {
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
 	// Start webserver on port: 8080 - You can fit your need :)
-	log.Println("Listening...")
+	log.Println("Listening on: localhost:" + appConfig.AppPort)
 	http.ListenAndServe(":"+appConfig.AppPort, nil)
 
 }
